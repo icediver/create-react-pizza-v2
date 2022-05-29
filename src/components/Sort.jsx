@@ -1,9 +1,12 @@
-import { isValidDateValue } from "@testing-library/user-event/dist/utils";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from 'styled-components';
+import { setSort } from "../redux/slices/filterSlice";
 
 
-function Sort({ value, onChangeSort }) {
+function Sort() {
+  const dispatch = useDispatch();
+  const sort = useSelector(state => state.filter.sort)
   const [open, setOpen] = useState(false);
   // const [activeCategory, setActiveCategory] = useState (0);
   const list = [
@@ -16,8 +19,9 @@ function Sort({ value, onChangeSort }) {
   ];
   // const sortName = list[value].name;
 
-  const onClickListItem = (index) => {
-    onChangeSort(index);
+  const onClickListItem = (obj) => {
+    // onChangeSort(index);
+    dispatch(setSort(obj))
     setOpen(false);
   }
 
@@ -36,7 +40,7 @@ function Sort({ value, onChangeSort }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{value.name}</span>
+        <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </SortLabel>
       {open && (
         <SortPopup>
@@ -46,7 +50,7 @@ function Sort({ value, onChangeSort }) {
                 return (<SortListItem
                   key={index}
                   onClick={() => onClickListItem(obj)}
-                  className={value.sortProperty === obj.sortProperty ? 'active' : ''}>
+                  className={sort.sortProperty === obj.sortProperty ? 'active' : ''}>
                   {obj.name}
                 </SortListItem>)
               })

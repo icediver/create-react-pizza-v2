@@ -6,9 +6,12 @@ import Header from './components/Header';
 import Cart from './pages/Cart';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+
 import './scss/app.scss';
 // import pizzas from './assets/pizzas.json';
 export const SearchContext = React.createContext('');
+
+
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
