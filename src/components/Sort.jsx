@@ -1,32 +1,52 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { setSort } from "../redux/slices/filterSlice";
+import { setSort } from '../redux/slices/filterSlice';
 
 export const sortList = [
-  {name:'популярности (DESC)', sortProperty: 'rating' },
-  {name:'популярности (ASC)', sortProperty: '-rating' },
-  {name: 'цене (DESC)', sortProperty: 'price' },
-  {name: 'цене (ASC)', sortProperty: '-price' },
-  {name:'алфавиту (DESC)', sortProperty: 'title' },
-  {name:'алфавиту (ASC)', sortProperty: '-title' },
+  { name: 'популярности (DESC)', sortProperty: 'rating' },
+  { name: 'популярности (ASC)', sortProperty: '-rating' },
+  { name: 'цене (DESC)', sortProperty: 'price' },
+  { name: 'цене (ASC)', sortProperty: '-price' },
+  { name: 'алфавиту (DESC)', sortProperty: 'title' },
+  { name: 'алфавиту (ASC)', sortProperty: '-title' },
 ];
 
 function Sort() {
   const dispatch = useDispatch();
-  const sort = useSelector(state => state.filter.sort)
+  const sort = useSelector((state) => state.filter.sort);
+  const sortRef = React.useRef();
+
   const [open, setOpen] = useState(false);
   // const [activeCategory, setActiveCategory] = useState (0);
   // const sortName = list[value].name;
 
   const onClickListItem = (obj) => {
     // onChangeSort(index);
-    dispatch(setSort(obj))
+    dispatch(setSort(obj));
     setOpen(false);
-  }
+  };
+  React.useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.path.includes(sortRef.current)) {
+        setOpen(false);
+      }
+    };
+    document.body.addEventListener(
+      'click',
+      handleClickOutside,
+    );
+    return () => {
+      document.body.removeEventListener(
+        'click',
+        handleClickOutside,
+      );
+    };
+  }, []);
 
   return (
-    <SortElement>
+    <SortElement ref={sortRef}>
       <SortLabel>
         <svg
           width="10"
@@ -40,23 +60,27 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sort.name}</span>
+        <span onClick={() => setOpen(!open)}>
+          {sort.name}
+        </span>
       </SortLabel>
       {open && (
         <SortPopup>
           <ul>
-            {
-              sortList.map((obj, index) => {
-                return (<SortListItem
+            {sortList.map((obj, index) => {
+              return (
+                <SortListItem
                   key={index}
                   onClick={() => onClickListItem(obj)}
-                  className={sort.sortProperty === obj.sortProperty ? 'active' : ''}>
+                  className={
+                    sort.sortProperty === obj.sortProperty
+                      ? 'active'
+                      : ''
+                  }>
                   {obj.name}
-                </SortListItem>)
-              })
-            }
-
-            
+                </SortListItem>
+              );
+            })}
           </ul>
         </SortPopup>
       )}
@@ -69,59 +93,54 @@ const SortElement = styled.div`
   position: relative;
   width: 260px;
   .sort__label {
-    
-
   }
 
   .sort__popup {
-    
   }
 `;
 const SortLabel = styled.div`
   display: flex;
-    align-items: center;
+  align-items: center;
 
-    svg {
-      margin-right: 8px;
-    }
+  svg {
+    margin-right: 8px;
+  }
 
+  b {
+    margin-right: 8px;
+  }
+
+  span {
+    color: #fe5f1e;
+    border-bottom: 1px dashed #fe5f1e;
+    cursor: pointer;
+  }
+  @media (max-width: 820px) {
+    justify-content: center;
+  }
+  @media (max-width: 1260px) {
     b {
-      margin-right: 8px;
+      display: none;
     }
-
-    span {
-      color: #fe5f1e;
-      border-bottom: 1px dashed #fe5f1e;
-      cursor: pointer;
-    }
-    @media (max-width: 820px) {
-      justify-content: center;
-      
-    }
-    @media (max-width: 1260px) {      
-      b {
-          display: none;
-      }      
-    }
-  `;
+  }
+`;
 const SortPopup = styled.div`
   position: absolute;
-    right: 0;
-    margin-top: 15px;
-    background: #ffffff;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.09);
-    border-radius: 10px;
-    overflow: hidden;
-    padding: 10px 0;
-    width: 220px;
+  right: 0;
+  margin-top: 15px;
+  background: #ffffff;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.09);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px 0;
+  width: 220px;
 
-    ul {
-      overflow: hidden;
-      li {
-        
-      }
+  ul {
+    overflow: hidden;
+    li {
     }
-`; 
+  }
+`;
 const SortListItem = styled.li`
   padding: 12px 20px;
   cursor: pointer;
