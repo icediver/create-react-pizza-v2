@@ -9,15 +9,13 @@ import NotFound from './pages/NotFound';
 
 import './scss/app.scss';
 // import pizzas from './assets/pizzas.json';
-export const SearchContext = React.createContext('');
+// export const SearchContext = React.createContext('');
 
 
 
 function App() {
-  const [searchValue, setSearchValue] = useState('');
   return (
     <div className="wrapper">
-      <SearchContext.Provider value={{searchValue, setSearchValue}}>
         <Header />
         <div className="content">
           
@@ -28,7 +26,6 @@ function App() {
             </Routes>
           
         </div>
-      </SearchContext.Provider>
     </div>
     );
 }
