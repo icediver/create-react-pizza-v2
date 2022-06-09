@@ -1,6 +1,6 @@
 // import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
 import Categories from "../components/Categories";
@@ -20,17 +20,16 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMounted = useRef(false);
-  
+
   const { items, status } = useSelector(selectPizzaData);
-  
-  const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
+
+  const { categoryId, sort, currentPage, searchValue } =
+    useSelector(selectFilter);
   const isSearch = useRef(false);
 
   const sortType = sort.sortProperty;
 
-  // const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const [currentPage, setCurrentPage] = useState(1);
   const onChangeCategory = id => {
     dispatch(setCategoryId(id));
   };
@@ -41,7 +40,6 @@ const Home = () => {
   useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
-
       const sort = sortList.find(
         obj => obj.sortProperty === params.sortProperty,
       );
@@ -68,7 +66,6 @@ const Home = () => {
     }
     isMounted.current = true;
   }, [categoryId, sortType, currentPage]);
-
   // Если был первый рендер, то запрашиваем пиццы
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -85,35 +82,7 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : ``;
     const search = searchValue ? `&search=${searchValue}` : ``;
 
-    // fetch(
-    //   `https://628bd696667aea3a3e371c78.mockapi.io/items?page=${currentPage}&limit=4&${
-    //     category}&sortBy=${sortBy}&order=${order}${search}`,
-    // )
-    //   .then((res) => res.json())
-    //   .then((json) => {
-    //     setItems(json);
-    //     setIsLoading(false);
-    //   });
-
-    // await axios
-    //   .get(
-    //     `https://628bd696667aea3a3e371c78.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
-    //   )
-    //   .then(res => {
-    //     // console.log(res);
-    //     setItems(res.data);
-    //     setIsLoading(false);
-    //   }).catch(err => {
-    //     setIsLoading(false);
-    //   })
-
     try {
-      // const { data } = await axios.get(
-      //   `https://628bd696667aea3a3e371c78.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
-      // );
-      // dispatch(setItems(data))
-      // console.log(data);
-
       dispatch(
         fetchPizzas({
           sortBy,
@@ -123,10 +92,7 @@ const Home = () => {
           currentPage,
         }),
       );
-      // setItems(res.data);
-      // setIsLoading(false);
     } catch (error) {
-      // setIsLoading(false);
       console.log("ERROR", error);
       alert("Ошибка при получении пицц");
     } finally {
@@ -134,7 +100,11 @@ const Home = () => {
     }
   };
 
-  const pizzas = items.map((el, index) => <PizzaBlock key={index} {...el} />);
+  const pizzas = items.map((el, index) => (
+    <Link key={index} to={`/pizza/${el.id}`}>
+      <PizzaBlock {...el} />
+    </Link>
+  ));
   const skeletons = [...new Array(6)].map((_, index) => (
     <Skeleton key={index} />
   ));
@@ -146,20 +116,20 @@ const Home = () => {
           <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
-        {
-          status === 'error' ? (
-            <div className="content__error-info">
-              <h2>Произошла ошибка</h2>
-              <p>К сожалению не удалось получить пиццы. Попробуйте повторить попытку позже.</p>
-            </div>
-          ) : (
-          <div className="content__items">
-          {status === "loading" ? skeletons : pizzas}
+        {status === "error" ? (
+          <div className="content__error-info">
+            <h2>Произошла ошибка</h2>
+            <p>
+              К сожалению не удалось получить пиццы. Попробуйте повторить
+              попытку позже.
+            </p>
           </div>
-          )
-        }
-        
-        
+        ) : (
+          <div className="content__items">
+            {status === "loading" ? skeletons : pizzas}
+          </div>
+        )}
+
         <Pagination currentPage={currentPage} onChangePage={onChangePage} />
       </div>
     </>
