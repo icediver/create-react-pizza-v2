@@ -10,17 +10,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
 import "./scss/app.scss";
-// import pizzas from './assets/pizzas.json';
-// export const SearchContext = React.createContext('');
-function Parent({ children }) {
-  return (
-    <div>
-      <h1>Заголовок</h1>
-      {children}
-      <h4>12324323</h4>
-    </div>
-  );
-}
+
 
 function App() {
   return (
