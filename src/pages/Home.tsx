@@ -16,7 +16,7 @@ import {
 } from "../redux/slices/filterSlice";
 import { fetchPizzas, selectPizzaData } from "../redux/slices/pizzaSlice";
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMounted = useRef(false);
@@ -30,11 +30,11 @@ const Home = () => {
   const sortType = sort.sortProperty;
 
   const [isLoading, setIsLoading] = useState(true);
-  const onChangeCategory = id => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
-  const onChangePage = number => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редаксе
   useEffect(() => {
@@ -84,6 +84,7 @@ const Home = () => {
 
     try {
       dispatch(
+        //@ts-ignore
         fetchPizzas({
           sortBy,
           order,
@@ -100,8 +101,8 @@ const Home = () => {
     }
   };
 
-  const pizzas = items.map((el, index) => (
-    <Link key={index} to={`/pizza/${el.id}`}>
+  const pizzas = items.map((el: any) => (
+    <Link key={el.id} to={`/pizza/${el.id}`}>
       <PizzaBlock {...el} />
     </Link>
   ));

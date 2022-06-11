@@ -1,47 +1,46 @@
-import { useState } from 'react';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { selectSort, setSort } from '../redux/slices/filterSlice';
+import { useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { selectSort, setSort } from "../redux/slices/filterSlice";
 
-export const sortList = [
-  { name: 'популярности (DESC)', sortProperty: 'rating' },
-  { name: 'популярности (ASC)', sortProperty: '-rating' },
-  { name: 'цене (DESC)', sortProperty: 'price' },
-  { name: 'цене (ASC)', sortProperty: '-price' },
-  { name: 'алфавиту (DESC)', sortProperty: 'title' },
-  { name: 'алфавиту (ASC)', sortProperty: '-title' },
+
+
+type SortItem = {
+  name: string;
+  sortProperty: string;
+};
+
+export const sortList: SortItem[] = [
+  { name: "популярности (DESC)", sortProperty: "rating" },
+  { name: "популярности (ASC)", sortProperty: "-rating" },
+  { name: "цене (DESC)", sortProperty: "price" },
+  { name: "цене (ASC)", sortProperty: "-price" },
+  { name: "алфавиту (DESC)", sortProperty: "title" },
+  { name: "алфавиту (ASC)", sortProperty: "-title" },
 ];
 
 function Sort() {
   const dispatch = useDispatch();
   const sort = useSelector(selectSort);
-  const sortRef = React.useRef();
+  const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState(false);
-  // const [activeCategory, setActiveCategory] = useState (0);
-  // const sortName = list[value].name;
 
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: SortItem) => {
     // onChangeSort(index);
     dispatch(setSort(obj));
     setOpen(false);
   };
   React.useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!e.path.includes(sortRef.current)) {
+    const handleClickOutside = (event: any) => {
+      if (!event.path.includes(sortRef.current)) {
         setOpen(false);
       }
     };
-    document.body.addEventListener(
-      'click',
-      handleClickOutside,
-    );
+    document.body.addEventListener("click", handleClickOutside);
     return () => {
-      document.body.removeEventListener(
-        'click',
-        handleClickOutside,
-      );
+      document.body.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -60,9 +59,7 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>
-          {sort.name}
-        </span>
+        <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </SortLabel>
       {open && (
         <SortPopup>
@@ -73,9 +70,7 @@ function Sort() {
                   key={index}
                   onClick={() => onClickListItem(obj)}
                   className={
-                    sort.sortProperty === obj.sortProperty
-                      ? 'active'
-                      : ''
+                    sort.sortProperty === obj.sortProperty ? "active" : ""
                   }>
                   {obj.name}
                 </SortListItem>
