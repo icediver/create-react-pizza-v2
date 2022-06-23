@@ -2,7 +2,12 @@ import { useState } from "react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { selectSort, setSort, Sort, SortPropertyEnum } from "../redux/slices/filterSlice";
+import {
+  selectSort,
+  setSort,
+  Sort,
+  SortPropertyEnum,
+} from "../redux/slices/filterSlice";
 
 type SortItem = {
   name: string;
@@ -13,18 +18,21 @@ type PopupClick = MouseEvent & {
   path: Node[];
 };
 
+type SortPopupProps = {
+  value: Sort;
+}
+
 export const sortList: SortItem[] = [
-  { name: 'популярности (DESC)', sortProperty: SortPropertyEnum.RATING_DESC },
-  { name: 'популярности (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
-  { name: 'цене (DESC)', sortProperty: SortPropertyEnum.PRICE_DESC },
-  { name: 'цене (ASC)', sortProperty: SortPropertyEnum.PRICE_ASC },
-  { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnum.TITLE_DESC },
-  { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnum.TITLE_ASC },
+  { name: "популярности (DESC)", sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: "популярности (ASC)", sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: "цене (DESC)", sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: "цене (ASC)", sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: "алфавиту (DESC)", sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: "алфавиту (ASC)", sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-function SortPop() {
+const SortPop: React.FC<SortPopupProps> = ({ value }) => {
   const dispatch = useDispatch();
-  const sort = useSelector(selectSort);
   const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState(false);
@@ -65,7 +73,7 @@ function SortPop() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sort.name}</span>
+        <span onClick={() => setOpen(!open)}>{value.name}</span>
       </SortLabel>
       {open && (
         <SortPopup>
@@ -76,7 +84,7 @@ function SortPop() {
                   key={index}
                   onClick={() => onClickListItem(obj)}
                   className={
-                    sort.sortProperty === obj.sortProperty ? "active" : ""
+                    value.sortProperty === obj.sortProperty ? "active" : ""
                   }>
                   {obj.name}
                 </SortListItem>
@@ -84,10 +92,10 @@ function SortPop() {
             })}
           </ul>
         </SortPopup>
-      )} 
+      )}
     </SortElement>
   );
-}
+};
 export default SortPop;
 
 const SortElement = styled.div`

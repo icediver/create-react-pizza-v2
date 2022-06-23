@@ -12,7 +12,6 @@ const Search: React.FC = () => {
   const onClickClear = (event: React.MouseEvent<SVGSVGElement>) => {
     dispatch(setSearchValue(""));
     setValue("");
-
     inputRef.current?.focus();
   };
   const updateSearchValue = useCallback(
@@ -62,6 +61,13 @@ const Search: React.FC = () => {
           y2="20.366"
         />
       </svg>
+      <input
+        ref={inputRef}
+        value={value}
+        onChange={onChangeInput}
+        className={styles.input}
+        placeholder="Поиск пиццы..."
+      />
       {value && (
         <svg
           onClick={onClickClear}
@@ -94,13 +100,6 @@ const Search: React.FC = () => {
           </g>
         </svg>
       )}
-      <input
-        ref={inputRef}
-        value={value}
-        onChange={onChangeInput}
-        className={styles.input}
-        placeholder="Поиск пиццы..."
-      />
     </div>
   );
 };

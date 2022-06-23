@@ -4,7 +4,6 @@ import { RootState } from "../store";
 import { CartItem } from "./cartSlice";
 import { Sort } from "./filterSlice";
 
-
 export type SearchPizzaParams = {
   sortBy: string;
   order: string;
@@ -15,14 +14,14 @@ export type SearchPizzaParams = {
 
 export const fetchPizzas = createAsyncThunk<Pizza[], Record<string, string>>(
   "pizza/fetchPizzasStatus",
-  async (params) => {
+  async params => {
     const { sortBy, order, category, search, currentPage } = params;
     const { data } = await axios.get<Pizza[]>(
       `https://628bd696667aea3a3e371c78.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`,
     );
 
     // console.log(thunkApi.getState());
-    return data ;
+    return data;
   },
 );
 type Pizza = {
@@ -33,12 +32,12 @@ type Pizza = {
   size: number[];
   types: number[];
   rating: number;
-}
+};
 
 export enum Status {
-  LOADING = 'loading', 
-  SUCCESS = 'success',
-  ERROR = 'error'
+  LOADING = "loading",
+  SUCCESS = "success",
+  ERROR = "error",
 }
 
 interface PizzaSliceState {
@@ -59,7 +58,7 @@ const pizzaSlice = createSlice({
       state.items = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(fetchPizzas.pending, (state, action) => {
       state.status = Status.LOADING;
       state.items = [];
@@ -74,7 +73,7 @@ const pizzaSlice = createSlice({
       state.items = [];
       // console.log("Была ошибка");
     });
-  }
+  },
   // extraReducers: {
   //   [fetchPizzas.pending]: (state, action) => {
   //     state.status = "loading";
@@ -93,7 +92,7 @@ const pizzaSlice = createSlice({
   // },
 });
 
-export const selectPizzaData = (state: RootState) => state.pizza
+export const selectPizzaData = (state: RootState) => state.pizza;
 
 export const { setItems } = pizzaSlice.actions;
 
