@@ -18,9 +18,9 @@ import { fetchPizzas, SearchPizzaParams, selectPizzaData } from "../redux/slices
 import { useAppDispatch } from "../redux/store";
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isMounted = useRef(false);
+  // const isMounted = useRef(false);
 
   const { items, status } = useSelector(selectPizzaData);
 
@@ -119,7 +119,7 @@ const Home: React.FC = () => {
 
   const pizzas = items.map((el: any) => (
    
-      <PizzaBlock {...el} />
+      <PizzaBlock key={el.id} {...el} />
    
   ));
   const skeletons = [...new Array(6)].map((_, index) => (
@@ -130,7 +130,7 @@ const Home: React.FC = () => {
       <div className="container">
         <div className="content__top">
           <Categories value={categoryId} onChangeCategory={onChangeCategory} />
-          <Sort />
+          <Sort value={sort}/>
         </div>
         <h2 className="content__title">Все пиццы</h2>
         {status === "error" ? (
